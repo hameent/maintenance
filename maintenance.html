@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#050505">
+  <title>Maintenance — HAME Entertainment</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --background: #050505;
+      --surface: #0d0d0d;
+      --primary: #ffffff;
+      --secondary: #a1a1aa;
+      --muted: #71717a;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100svh;
+      overflow-x: hidden;
+      background: var(--background);
+      color: var(--primary);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: -4;
+      overflow: hidden;
+      background:
+        linear-gradient(to bottom, rgba(5, 5, 5, 0.08), rgba(5, 5, 5, 0.38) 46%, #050505 100%),
+        radial-gradient(ellipse at 75% 35%, #333338 0%, #151518 23%, #080809 52%, #050505 76%);
+    }
+
+    .backdrop::before {
+      position: absolute;
+      top: -18%;
+      right: -10%;
+      width: min(72vw, 1000px);
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 255, 255, 0.055);
+      border-radius: 50%;
+      content: "";
+      background:
+        repeating-radial-gradient(circle, transparent 0 22px, rgba(255, 255, 255, 0.028) 23px 24px),
+        radial-gradient(circle at 42% 40%, rgba(255, 255, 255, 0.13), transparent 7%, rgba(255, 255, 255, 0.025) 8%, transparent 55%);
+      box-shadow:
+        0 0 120px rgba(255, 255, 255, 0.025),
+        inset 0 0 120px rgba(255, 255, 255, 0.018);
+      animation: turn 36s linear infinite;
+    }
+
+    .backdrop::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.8'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .light {
+      position: fixed;
+      z-index: -3;
+      width: 40vw;
+      height: 30vw;
+      border-radius: 50%;
+      opacity: 0.055;
+      background: #fff;
+      filter: blur(130px);
+      pointer-events: none;
+      animation: breathe 9s ease-in-out infinite alternate;
+    }
+
+    .light--one {
+      top: -16vw;
+      left: 4vw;
+    }
+
+    .light--two {
+      right: -17vw;
+      bottom: -18vw;
+      animation-delay: -4s;
+    }
+
+    .page {
+      display: flex;
+      width: min(100% - 40px, 1280px);
+      min-height: 100svh;
+      margin: 0 auto;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      min-height: 92px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      justify-content: flex-end;
+      gap: 24px;
+    }
+
+    .header-status {
+      display: inline-flex;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      align-items: center;
+      gap: 9px;
+      background: rgba(255, 255, 255, 0.025);
+      color: var(--secondary);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .status-dot {
+      position: relative;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.58);
+    }
+
+    .status-dot::after {
+      position: absolute;
+      inset: -5px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: inherit;
+      content: "";
+      animation: pulse 1.8s ease-out infinite;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.52fr);
+      flex: 1;
+      gap: clamp(48px, 8vw, 120px);
+      padding: clamp(70px, 10vh, 130px) 0 80px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      max-width: 870px;
+    }
+
+    .kicker {
+      min-height: 22px;
+      margin: 0 0 20px;
+      color: var(--secondary);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 1px;
+      height: 1.1em;
+      margin-left: 5px;
+      background: #fff;
+      vertical-align: -0.12em;
+      animation: cursor 0.82s step-end infinite;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(54px, 7.2vw, 108px);
+      font-weight: 850;
+      line-height: 1.01;
+      letter-spacing: -0.065em;
+    }
+
+    .gradient-title {
+      display: inline-block;
+      padding-right: 0.06em;
+      color: transparent;
+      background: linear-gradient(96deg, #fff 8%, rgba(255, 255, 255, 0.72) 58%, rgba(255, 255, 255, 0.28) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .entertainment-title {
+      display: inline-block;
+      font-size: 0.78em;
+      letter-spacing: -0.055em;
+    }
+
+    .description {
+      max-width: 670px;
+      margin: 30px 0 0;
+      color: var(--secondary);
+      font-size: clamp(16px, 1.6vw, 20px);
+      line-height: 1.72;
+    }
+
+    .description strong {
+      color: #e4e4e7;
+      font-weight: 550;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 40px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 52px;
+      padding: 0 24px;
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 650;
+      text-decoration: none;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms ease;
+    }
+
+    .button:hover {
+      border-color: rgba(255, 255, 255, 0.26);
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .button--primary {
+      border-color: #fff;
+      background: #fff;
+      color: #090909;
+    }
+
+    .button--primary:hover {
+      border-color: #e4e4e7;
+      background: #e4e4e7;
+    }
+
+    .button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .status-card {
+      position: relative;
+      overflow: hidden;
+      padding: 30px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: rgba(13, 13, 13, 0.64);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .status-card::before {
+      position: absolute;
+      top: -90px;
+      right: -80px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      content: "";
+      background: rgba(255, 255, 255, 0.065);
+      filter: blur(42px);
+    }
+
+    .card-label {
+      position: relative;
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .waveform {
+      position: relative;
+      display: flex;
+      height: 86px;
+      margin-bottom: 31px;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .waveform span {
+      display: block;
+      width: 3px;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(to top, rgba(255, 255, 255, 0.24), #fff);
+      animation: waveform 1.35s ease-in-out infinite alternate;
+      transform-origin: center;
+    }
+
+    .waveform span:nth-child(2n) { animation-delay: -0.8s; }
+    .waveform span:nth-child(3n) { animation-delay: -0.35s; }
+    .waveform span:nth-child(4n) { animation-delay: -1.05s; }
+    .waveform span:nth-child(5n) { animation-delay: -0.18s; }
+
+    .card-title {
+      position: relative;
+      margin: 0;
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+    }
+
+    .card-copy {
+      position: relative;
+      margin: 10px 0 26px;
+      color: var(--secondary);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .checks {
+      position: relative;
+      display: grid;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .check {
+      display: flex;
+      min-height: 51px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: var(--secondary);
+      font-size: 12px;
+    }
+
+    .check:last-child {
+      border-bottom: 0;
+    }
+
+    .check strong {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #e4e4e7;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .check strong::before {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      content: "";
+      background: #fff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
+    }
+
+    .footer {
+      display: flex;
+      min-height: 76px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .footer a {
+      color: var(--secondary);
+      text-decoration: none;
+      transition: color 160ms ease;
+    }
+
+    .footer a:hover {
+      color: #fff;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.8; transform: scale(0.6); }
+      75%, 100% { opacity: 0; transform: scale(1.55); }
+    }
+
+    @keyframes cursor {
+      0%, 45% { opacity: 1; }
+      46%, 100% { opacity: 0; }
+    }
+
+    @keyframes waveform {
+      from { opacity: 0.4; transform: scaleY(0.4); }
+      to { opacity: 1; transform: scaleY(4.7); }
+    }
+
+    @keyframes turn {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes breathe {
+      from { opacity: 0.025; transform: scale(0.86); }
+      to { opacity: 0.07; transform: scale(1.14); }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 56px;
+      }
+
+      .hero-copy {
+        max-width: 760px;
+      }
+
+      .status-card {
+        width: min(100%, 600px);
+      }
+
+      .backdrop::before {
+        top: 8%;
+        right: -45%;
+        width: 130vw;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 28px, 520px);
+      }
+
+      .header {
+        min-height: 80px;
+      }
+
+      .header-status {
+        padding: 9px 11px;
+        font-size: 8px;
+        letter-spacing: 0.09em;
+      }
+
+      .hero {
+        gap: 44px;
+        padding: 64px 0 56px;
+      }
+
+      .kicker {
+        font-size: 10px;
+        letter-spacing: 0.15em;
+      }
+
+      h1 {
+        font-size: clamp(48px, 14vw, 70px);
+      }
+
+      .entertainment-title {
+        font-size: 0.7em;
+      }
+
+      .description {
+        margin-top: 24px;
+        font-size: 15px;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-top: 32px;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .status-card {
+        padding: 23px;
+        border-radius: 22px;
+      }
+
+      .footer {
+        padding: 24px 0;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-links {
+        width: 100%;
+        justify-content: space-between;
+        gap: 15px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true"></div>
+  <div class="light light--one" aria-hidden="true"></div>
+  <div class="light light--two" aria-hidden="true"></div>
+
+  <div class="page">
+    <header class="header">
+      <div class="header-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        Scheduled maintenance
+      </div>
+    </header>
+
+    <main class="hero">
+      <section class="hero-copy" aria-labelledby="maintenance-title">
+        <p class="kicker">Music distribution · Publishing · Rights management<span class="cursor" aria-hidden="true"></span></p>
+
+        <h1 id="maintenance-title">
+          We are<br>
+          <span class="gradient-title">HAME<br><span class="entertainment-title">Entertainment.</span></span>
+        </h1>
+
+        <p class="description">
+          <strong>We are fine-tuning our digital infrastructure.</strong>
+          Our services are temporarily unavailable while we move to a new production environment and complete final system checks.
+        </p>
+
+        <div class="actions">
+          <button class="button button--primary" type="button" onclick="window.location.reload()">
+            Check again
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <a class="button" href="mailto:info@hame.io.vn">Contact our team</a>
+        </div>
+      </section>
+
+      <aside class="status-card" aria-label="Maintenance progress">
+        <p class="card-label">System status / 503</p>
+
+        <div class="waveform" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <h2 class="card-title">A short intermission.</h2>
+        <p class="card-copy">The music will resume shortly. No action is required on your side.</p>
+
+        <div class="checks">
+          <div class="check">
+            <span>Infrastructure migration</span>
+            <strong>In progress</strong>
+          </div>
+          <div class="check">
+            <span>Data integrity</span>
+            <strong>Protected</strong>
+          </div>
+          <div class="check">
+            <span>Expected return</span>
+            <strong>Soon</strong>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <span>© <span id="year">2026</span> HAME Entertainment. All rights reserved.</span>
+      <div class="footer-links">
+        <span id="checked-time">Status checked now</span>
+        <a href="mailto:info@hame.io.vn">info@hame.io.vn</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("checked-time").textContent =
+      "Checked " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  </script>
+</body>
+</html>
